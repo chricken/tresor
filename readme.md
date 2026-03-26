@@ -26,3 +26,6 @@ Im Tresor wird der State durch den Worker angelegt werden.
 Wenn dieses Daten verändert werden, muss überprüft werden, ob die neuen Daten dem Schema im State entsprehcne.
 
 Das Schema wird beim Anlegen durch den Worker definiert.
+
+## Immutability
+Durch die Übergabe in den Worker erhalten wir automatisch eine Deep Copy des Objektes. Dadurch ist Immutability gewährleistet.

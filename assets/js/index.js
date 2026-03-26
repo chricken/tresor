@@ -8,9 +8,28 @@ const tresor = new Tresor({
 })
 
 const init = async () => {
+    await tresor.dispatch({
+        type: 'set',
+        payload: {counter: 42}
+    })
+
+    await tresor.dispatch({
+        type: 'increment'
+    })
+    await tresor.dispatch({
+        type: 'increment'
+    })
+    await tresor.dispatch({
+        type: 'increment'
+    })
+    await tresor.dispatch({
+        type: 'decrement'
+    })
+
     let state = await tresor.dispatch({
         type: 'get'
     })
+
 
     console.log('currentState', state);
 }

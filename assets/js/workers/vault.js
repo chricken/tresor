@@ -14,15 +14,23 @@ const tresor = new Tresor({
             return payload;
         },
         increment({state}) {
-            return state + 1;
+            return {...state, counter: state.counter + 1}
         },
         decrement({state}) {
-            return state - 1;
+            return {...state, counter: state.counter - 1}
         }
     }
 });
 
 
+self.addEventListener('message', (evt) => {
+    console.log(tresor.getLog());
+
+    self.postMessage(tresor.messageHandler(evt));
+
+})
+
+/*
 self.addEventListener('message', ({data}) => {
 
     const {msg = null, token = null} = data;
@@ -33,5 +41,6 @@ self.addEventListener('message', ({data}) => {
     self.postMessage({result, token});
 
 })
+*/
 
 self.postMessage('ready');

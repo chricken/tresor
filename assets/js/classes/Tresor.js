@@ -5,8 +5,7 @@ class Tresor {
                     role = 'client',  // Alternativ: "server
                     path = null, // Pfad zum Worker vom HTML aus gesehen
                     reducers = {},
-                    schema = {},
-                    // state = null,   // Der State, der im Tresor verwaltet werden soll
+                    schema = {},    // Der initiale State
                 }) {
 
         if (role.toLowerCase() === 'client') return this.createClient({path});
@@ -27,12 +26,11 @@ class Tresor {
         return ({
             role: 'client',
             dispatch(msg) {
-                console.log('Class', msg);
                 return new Promise((resolve, reject) => {
-                    let token = (Math.random()*1e17).toString(36) + '_' + (Date.now()).toString(36);
+                    let token = (Math.random() * 1e17).toString(36) + '_' + (Date.now()).toString(36);
                     worker.postMessage({msg, token});
                     worker.addEventListener('message', ({data}) => {
-                        if(data.token === token) {
+                        if (data.token === token) {
                             resolve(data);
                         }
                     })
@@ -44,23 +42,33 @@ class Tresor {
 
     createServer({
                      schema = {},
-                     reducers = {}
+                     reducers = {},
+                     lengthLog = 10,
                  }) {
 
         let state = schema;
+        let log = [];
 
         return {
             role: 'server',
+            messageHandler({data}) {
+                const {msg = null, token = null} = data;
+                const {type = null, payload = null, meta = null} = msg;
+                return {result: this.reduce({type, payload, meta}), token};
+            },
+            getLog(){
+                return log
+            },
             reduce({
                        type = null,
                        payload = null,
                        meta = null
                    }) {
 
-
-                return reducers[type]
+                // const localState = JSON.parse(JSON.stringify(state));
+                let result = reducers[type]
                     ? reducers[type]({
-                        state: JSON.parse(JSON.stringify(state)),
+                        state,
                         payload,
                         meta
                     })
@@ -68,6 +76,15 @@ class Tresor {
                         status: 'error',
                         error: 'Reducer not found'
                     }
+
+                if (result.status !== 'error') {
+                    log.push({type, payload, result});
+                    while (log.length > lengthLog) log.shift();
+                    state = result;
+                    return state
+                } else {
+                    return result
+                }
             }
         }
     }
