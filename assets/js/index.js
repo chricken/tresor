@@ -34,7 +34,6 @@ elements.btnAddUser.addEventListener('click', async () => {
     await tresor.dispatch({
         type:'addUser',
         payload:{
-            id: (Math.random()*1e17).toString(36),
             username: elements.inpUsername.value,
             email: elements.inpEmail.value,
         }

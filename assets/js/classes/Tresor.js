@@ -48,6 +48,7 @@ class Tresor {
 
         let state = schema;
         let log = [];
+        let idCounter = 1;
 
         return {
             role: 'server',
@@ -56,8 +57,12 @@ class Tresor {
                 const {type = null, payload = null, meta = null} = msg;
                 return {state: this.reduce({type, payload, meta}), token};
             },
-            getLog(){
+            getLog() {
                 return log
+            },
+            createID() {
+                let id = `${Date.now()}_${idCounter++}`;
+                return id;
             },
             reduce({
                        type = null,

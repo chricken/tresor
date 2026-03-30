@@ -33,6 +33,7 @@ const tresor = new Tresor({
             return {...state, counter: state.counter - 1}
         },
         addUser({state, payload}){
+            if(!payload.id)payload.id = tresor.createID();
             return {...state, users: [...state.users, payload]}
         }
     }
