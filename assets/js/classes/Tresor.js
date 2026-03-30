@@ -54,7 +54,7 @@ class Tresor {
             messageHandler({data}) {
                 const {msg = null, token = null} = data;
                 const {type = null, payload = null, meta = null} = msg;
-                return {result: this.reduce({type, payload, meta}), token};
+                return {state: this.reduce({type, payload, meta}), token};
             },
             getLog(){
                 return log

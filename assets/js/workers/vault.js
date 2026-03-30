@@ -5,7 +5,20 @@ import Tresor from '../classes/Tresor.js'
 
 const tresor = new Tresor({
     role: 'server',
-    schema: {counter: 0},
+
+    schema: {
+        counter: 0,
+        users:[{
+            id:(Math.random()*1e17).toString(36),
+            username: 'maxmuster',
+            email: 'max@muster.com'
+        },{
+            id:(Math.random()*1e17).toString(36),
+            username: 'erika',
+            email: 'erika@example.com'
+        }]
+    },
+
     reducers: {
         get({state}) {
             return state;
@@ -18,6 +31,9 @@ const tresor = new Tresor({
         },
         decrement({state}) {
             return {...state, counter: state.counter - 1}
+        },
+        addUser({state, payload}){
+            return {...state, users: [...state.users, payload]}
         }
     }
 });
